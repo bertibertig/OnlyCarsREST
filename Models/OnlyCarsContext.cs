@@ -23,7 +23,8 @@ namespace OnlyCarsREST.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Initial Catalog=OnlyCars;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False;");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Initial Catalog=OnlyCars;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
             }
         }
 
@@ -51,20 +52,32 @@ namespace OnlyCarsREST.Models
                     .HasColumnName("carId")
                     .IsFixedLength();
 
+                entity.Property(e => e.Ldx)
+                    .HasColumnType("numeric(18, 0)")
+                    .HasColumnName("ldx");
+
+                entity.Property(e => e.Ldy)
+                    .HasColumnType("numeric(18, 0)")
+                    .HasColumnName("ldy");
+
                 entity.Property(e => e.Level).HasColumnName("level");
+
+                entity.Property(e => e.Occupied)
+                    .HasColumnType("numeric(1, 0)")
+                    .HasColumnName("occupied");
 
                 entity.Property(e => e.ParkingNumber)
                     .HasMaxLength(10)
                     .IsUnicode(false)
                     .HasColumnName("parkingNumber");
 
-                entity.Property(e => e.X)
+                entity.Property(e => e.Urx)
                     .HasColumnType("numeric(18, 0)")
-                    .HasColumnName("x");
+                    .HasColumnName("urx");
 
-                entity.Property(e => e.Y)
+                entity.Property(e => e.Ury)
                     .HasColumnType("numeric(18, 0)")
-                    .HasColumnName("y");
+                    .HasColumnName("ury");
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -1,0 +1,7 @@
+﻿Scaffold-DbContext "Server=(localdb)\MSSQLLocalDB;Initial Catalog=OnlyCars;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -force
+
+dotnet user-secrets set ConnectionStrings:OnlyCarsDB "Server=(localdb)\MSSQLLocalDB;Initial Catalog=OnlyCars;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"
+
+
+
+Scaffold-DbContext ConnectionStrings:OnlyCarsDB Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -force
