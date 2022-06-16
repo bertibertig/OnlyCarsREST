@@ -1,3 +1,4 @@
+using OnlyCarsREST;
 using OnlyCarsREST.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +7,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddControllers(options => {
+    options.InputFormatters.Insert(0, OnlyCarsJPIF.GetJsonPatchInputFormatter());
+});
 
 var app = builder.Build();
 
@@ -49,22 +54,4 @@ app.MapGet("/unoccupiedSpaces", async () => {
     return unOccSpaces;
 }).WithName("GetUnOccupiedParkingSpaces");
 
-app.MapPost("/setOccupied", async (int[] parkingSpacesIndexes) => {
-    await using (OnlyCarsContext db = new OnlyCarsContext()) {
-        foreach(var index in parkingSpacesIndexes) {
-            var parkingSpace = db.ParkingPlaces.FirstOrDefault(x =>x.Id == index);
-            if(parkingSpace == null) {
-                return Results.NotFound(index);
-            }
-            parkingSpace.Occupied = 1;
-        }
-        db.SaveChanges();
-    }
-    return Results.Ok(parkingSpacesIndexes);
-}).WithName("SetOccupied");
-
 app.Run();
-
-internal record WeatherForecast(DateTime Date, int TemperatureC, string? Summary) {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
