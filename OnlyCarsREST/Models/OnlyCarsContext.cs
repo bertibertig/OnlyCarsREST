@@ -35,52 +35,17 @@ namespace OnlyCarsREST.Models
                 entity.ToTable("Car");
 
                 entity.Property(e => e.LicensePlate)
-                    .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasDefaultValueSql("((-1))");
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<ParkingPlace>(entity =>
             {
                 entity.ToTable("ParkingPlace");
 
-                entity.Property(e => e.CarId)
-                    .HasMaxLength(10)
-                    .HasColumnName("carId")
-                    .IsFixedLength();
-
-                entity.Property(e => e.Ldx)
-                    .HasColumnType("numeric(18, 0)")
-                    .HasColumnName("ldx")
-                    .HasDefaultValueSql("((-1))");
-
-                entity.Property(e => e.Ldy)
-                    .HasColumnType("numeric(18, 0)")
-                    .HasColumnName("ldy")
-                    .HasDefaultValueSql("((-1))");
-
-                entity.Property(e => e.Level)
-                    .HasColumnName("level")
-                    .HasDefaultValueSql("((-1))");
-
-                entity.Property(e => e.Occupied)
-                    .HasColumnType("numeric(1, 0)")
-                    .HasColumnName("occupied");
-
                 entity.Property(e => e.ParkingNumber)
-                    .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasColumnName("parkingNumber");
-
-                entity.Property(e => e.Urx)
-                    .HasColumnType("numeric(18, 0)")
-                    .HasColumnName("urx")
-                    .HasDefaultValueSql("((-1))");
-
-                entity.Property(e => e.Ury)
-                    .HasColumnType("numeric(18, 0)")
-                    .HasColumnName("ury")
-                    .HasDefaultValueSql("((-1))");
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
             });
 
             OnModelCreatingPartial(modelBuilder);

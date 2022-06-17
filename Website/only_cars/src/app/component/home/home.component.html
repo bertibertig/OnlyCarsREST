@@ -1,0 +1,21 @@
+<div>
+  <mat-toolbar>
+    <img src="/assets/OnlyCars_Logo%20(1).png" alt="" width="150px">
+  </mat-toolbar>
+</div>
+<div class="card">
+  <mat-card>
+    <mat-tab-group mat-align-tabs="center">
+      <mat-tab *ngFor="let level of levels" label="{{level.name}}. Stock">
+        <mat-grid-list class="park-grid" cols="2" rowHeight="4:1" gutterSize="50px">
+          <ng-container *ngFor="let parkSlot of parkSlots">
+            <mat-grid-tile *ngIf="parkSlot.level == level.name"
+              class="park-slot-{{parkSlot.occupation}}">{{parkSlot.id}}
+            </mat-grid-tile>
+            </ng-container>
+        </mat-grid-list>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card>
+</div>
+

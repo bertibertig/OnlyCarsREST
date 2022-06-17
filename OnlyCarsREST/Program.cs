@@ -1,4 +1,5 @@
 using OnlyCarsREST;
+using OnlyCarsREST.Controller;
 using OnlyCarsREST.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +21,10 @@ if (app.Environment.IsDevelopment()) {
     app.UseSwaggerUI();
 }
 
+app.UseCors(x => x
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
 app.UseHttpsRedirection();
 
 app.MapGet("/cars", async () => {
@@ -53,5 +58,9 @@ app.MapGet("/unoccupiedSpaces", async () => {
     }
     return unOccSpaces;
 }).WithName("GetUnOccupiedParkingSpaces");
+
+//MQTTController.CreateMQTTPublisher();
+
+//MQTTController.CreateMQTTSubscriber();
 
 app.Run();
