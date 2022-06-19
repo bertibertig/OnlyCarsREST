@@ -8,9 +8,9 @@
     <mat-tab-group mat-align-tabs="center">
       <mat-tab *ngFor="let level of levels" label="{{level.name}}. Stock">
         <mat-grid-list class="park-grid" cols="2" rowHeight="4:1" gutterSize="50px">
-          <ng-container *ngFor="let parkSlot of parkSlots">
+          <ng-container *ngFor="let parkSlot of parkSlotObject">
             <mat-grid-tile *ngIf="parkSlot.level == level.name"
-              class="park-slot-{{parkSlot.occupation}}">{{parkSlot.id}}
+              class="park-slot-{{parkSlot.occupied}}">{{parkSlot.id}}
             </mat-grid-tile>
             </ng-container>
         </mat-grid-list>
