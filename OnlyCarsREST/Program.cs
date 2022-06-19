@@ -1,6 +1,7 @@
 using OnlyCarsREST;
 using OnlyCarsREST.Controller;
 using OnlyCarsREST.Models;
+using OnlyCarsREST.MQTT;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -59,7 +60,8 @@ app.MapGet("/unoccupiedSpaces", async () => {
     return unOccSpaces;
 }).WithName("GetUnOccupiedParkingSpaces");
 
-//MQTTController.CreateMQTTPublisher();
+Task.Run(() => Broker.StartBroker());
+Task.Run(() => Client.StartClient());
 
 //MQTTController.CreateMQTTSubscriber();
 
