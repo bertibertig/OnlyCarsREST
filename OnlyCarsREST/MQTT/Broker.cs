@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Net;
 using System.Text;
+using System.Text.Json;
 using MQTTnet;
 using MQTTnet.Server;
+using OnlyCarsREST.Models;
 using Serilog;
 
 namespace OnlyCarsREST.MQTT {
@@ -39,18 +41,37 @@ namespace OnlyCarsREST.MQTT {
 
         public static void OnNewMessage(MqttApplicationMessageInterceptorContext context) {
             var payload = context.ApplicationMessage?.Payload == null ? null : Encoding.UTF8.GetString(context.ApplicationMessage?.Payload);
+            
+            int id = -1;
+            int occupationInfo = -1;
 
-            MessageCounter++;
-
-            Log.Logger.Information(
-                "MessageId: {MessageCounter} - TimeStamp: {TimeStamp} -- Message: ClientId = {clientId}, Topic = {topic}, Payload = {payload}, QoS = {qos}, Retain-Flag = {retainFlag}",
-                MessageCounter,
-                DateTime.Now,
-                context.ClientId,
-                context.ApplicationMessage?.Topic,
-                payload,
-                context.ApplicationMessage?.QualityOfServiceLevel,
-                context.ApplicationMessage?.Retain);
+            if(payload != null) {
+                var message = payload.Replace("\\", "").Substring(payload.IndexOf("\"message\":\"")+11, payload.IndexOf("\",\"sent\"")-12);
+                var parkingInfo = message.Split(';');
+                if(parkingInfo.Count() == 2) {
+                    try {
+                        id = Convert.ToInt32(parkingInfo[0]);
+                        occupationInfo = Math.Max(Convert.ToInt32(parkingInfo[1]),1);
+                    }
+                    catch(FormatException e) {
+                        Log.Logger.Error("Error converting the recieved Information to ints: " + e.Message);
+                    }
+                    if (id != -1 && occupationInfo != -1) {
+                        using (OnlyCarsContext db = new OnlyCarsContext()) {
+                            if (db.ParkingPlaces.Any(x => x.Id == id)) {
+                                db.ParkingPlaces.FirstOrDefault(x => x.Id == id).Occupied = occupationInfo;
+                            }
+                            db.SaveChanges();
+                        }
+                        if(occupationInfo == 0) {
+                            Log.Logger.Information("Parked: Car parked at parking space with id: " + id);
+                        }
+                        else if(occupationInfo == 1) {
+                            Log.Logger.Information("Left: Car left parking space with id: " + id);
+                        }
+                    }
+                }
+            }
         }
     }
 }
