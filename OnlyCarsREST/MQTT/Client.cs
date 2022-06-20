@@ -39,22 +39,6 @@ namespace OnlyCarsREST.MQTT {
             });
 
             _mqttClient.StartAsync(options).GetAwaiter().GetResult();
-            
-            //Testing
-            string json = "";
-            json = JsonConvert.SerializeObject(new { message = "1;1", sent = DateTimeOffset.UtcNow });
-            _mqttClient.PublishAsync("dev.to/topic/json", json);
-            json = JsonConvert.SerializeObject(new { message = "2;1", sent = DateTimeOffset.UtcNow });
-            _mqttClient.PublishAsync("dev.to/topic/json", json);
-            json = JsonConvert.SerializeObject(new { message = "3;1", sent = DateTimeOffset.UtcNow });
-            _mqttClient.PublishAsync("dev.to/topic/json", json);
-
-            //while (true) {
-            //    string json = JsonConvert.SerializeObject(new { message = "Heyo :)", sent = DateTimeOffset.UtcNow });
-            //    _mqttClient.PublishAsync("dev.to/topic/json", json);
-
-            //    Task.Delay(1000).GetAwaiter().GetResult();
-            //}
         }
 
         public static void OnConnected(MqttClientConnectedEventArgs obj) {

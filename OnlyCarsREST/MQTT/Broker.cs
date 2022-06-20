@@ -46,16 +46,17 @@ namespace OnlyCarsREST.MQTT {
             int occupationInfo = -1;
 
             if(payload != null) {
-                var message = payload.Replace("\\", "").Substring(payload.IndexOf("\"message\":\"")+11, payload.IndexOf("\",\"sent\"")-12);
+                var message = payload;
                 var parkingInfo = message.Split(';');
                 if(parkingInfo.Count() == 2) {
                     try {
                         id = Convert.ToInt32(parkingInfo[0]);
-                        occupationInfo = Math.Max(Convert.ToInt32(parkingInfo[1]),1);
+                        occupationInfo = Convert.ToInt32(parkingInfo[1]);
                     }
                     catch(FormatException e) {
                         Log.Logger.Error("Error converting the recieved Information to ints: " + e.Message);
                     }
+                    Log.Logger.Information(message);
                     if (id != -1 && occupationInfo != -1) {
                         using (OnlyCarsContext db = new OnlyCarsContext()) {
                             if (db.ParkingPlaces.Any(x => x.Id == id)) {
@@ -63,10 +64,10 @@ namespace OnlyCarsREST.MQTT {
                             }
                             db.SaveChanges();
                         }
-                        if(occupationInfo == 0) {
+                        if(occupationInfo == 1) {
                             Log.Logger.Information("Parked: Car parked at parking space with id: " + id);
                         }
-                        else if(occupationInfo == 1) {
+                        else if(occupationInfo == 0) {
                             Log.Logger.Information("Left: Car left parking space with id: " + id);
                         }
                     }
